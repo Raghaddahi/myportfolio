@@ -1,0 +1,190 @@
+{% load wagtailcore_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ page.name }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #1e1e2e;
+      --border:   #313244;
+      --purple:   #cba6f7;
+      --lavender: #b4befe;
+      --text:     #cdd6f4;
+      --subtext:  #a6adc8;
+      --muted:    #6c7086;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 1rem 2rem 2rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--purple);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .role {
+      font-size: 0.9rem;
+      color: var(--subtext);
+      margin-bottom: 1.2rem;
+    }
+
+    .bio {
+      font-size: 0.92rem;
+      color: var(--subtext);
+      border-left: 3px solid var(--purple);
+      padding-left: 1rem;
+      margin-bottom: 0;
+    }
+    .bio p { margin: 0; color: inherit; }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1rem 0;
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--lavender);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── SHARED ROW STYLE for both links and projects ── */
+    .row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.22rem 0;
+      font-size: 0.9rem;
+    }
+
+    .row::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+      margin-bottom: 2px;
+    }
+
+   .row a {
+  color: var(--lavender);
+  text-decoration: underline;
+  text-decoration-color: var(--muted); /* subtle underline */
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.row a:hover {
+  color: var(--purple);
+  text-decoration-color: var(--purple);
+}
+    .row .sep   { color: var(--muted); }
+    .row .desc  { color: var(--subtext); font-size: 0.88rem; }
+
+    /* small extra links after desc */
+    .row .extra { margin-left: auto; display: flex; gap: 0.6rem; flex-shrink: 0; }
+    .row .extra a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      font-weight: 400;
+    }
+    .row .extra a:hover { color: var(--lavender); border-color: var(--lavender); text-decoration: none; }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>{{ page.name }}</h1>
+  <p class="role">{{ page.title_role }}</p>
+  <div class="bio">{{ page.bio|richtext }}</div>
+
+  <hr/>
+
+  <h2>Links</h2>
+
+  {% if page.github_url %}
+  <div class="row">
+    <a href="{{ page.github_url }}" target="_blank">GitHub</a>
+  </div>
+  {% endif %}
+  {% if page.linkedin_url %}
+  <div class="row">
+    <a href="{{ page.linkedin_url }}" target="_blank">LinkedIn</a>
+  </div>
+  {% endif %}
+  {% if page.email %}
+  <div class="row">
+    <a href="mailto:{{ page.email }}">Email</a>
+  </div>
+  {% endif %}
+  
+  {% if page.cv_url %}
+<div class="row">
+  <a href="{{ page.cv_url }}" target="_blank">CV</a>
+</div>
+{% endif %}
+
+  <hr/>
+
+  <h2>Projects</h2>
+
+  {% for project in page.projects.all %}
+  <div class="row">
+    {% if project.github_url %}
+    <a href="{{ project.github_url }}" target="_blank">{{ project.name }}</a>
+    {% elif project.live_url %}
+    <a href="{{ project.live_url }}" target="_blank">{{ project.name }}</a>
+    {% else %}
+    <span style="color:var(--lavender); font-weight:500;">{{ project.name }}</span>
+    {% endif %}
+    <span class="sep">—</span>
+    <span class="desc">{{ project.summary }}</span>
+    {% if project.github_url and project.live_url %}
+    <div class="extra">
+      <a href="{{ project.github_url }}" target="_blank">GitHub</a>
+      <a href="{{ project.live_url }}" target="_blank">Live</a>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <hr/>
+
+  <footer>{{ page.name }} · built with Wagtail</footer>
+
+</main>
+</body>
+</html>
