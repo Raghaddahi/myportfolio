@@ -16,6 +16,9 @@ import os
 load_dotenv()
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+ALLOWED_HOSTS = ['*']
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from pathlib import Path
 
